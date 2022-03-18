@@ -45,7 +45,6 @@ export class UsersService {
       );
       return { ok: true };
     } catch (e) {
-      console.log(e);
       return { ok: false, error: "Couldn't create an account" };
     }
   }
@@ -62,15 +61,13 @@ export class UsersService {
       const token = this.jwtService.sign(user.id);
       return { ok: true, token };
     } catch (error) {
-      console.log(error);
-      return { ok: false, error };
+      return { ok: false, error: 'Could not login' };
     }
   }
 
   async findById(id: number): Promise<UserProfileOutput> {
     try {
-      const user = await this.users.findOne({ id });
-      if (!user) return { ok: false, error: 'User not found' };
+      const user = await this.users.findOneOrFail({ id });
       return { ok: true, user };
     } catch (error) {
       return { ok: false, error: 'User not found' };
@@ -101,8 +98,7 @@ export class UsersService {
       await this.users.save(user);
       return { ok: true };
     } catch (e) {
-      console.log(e);
-      return { ok: false, error: e };
+      return { ok: false, error: 'Could not update profile.' };
     }
   }
 
@@ -120,8 +116,7 @@ export class UsersService {
       }
       return { ok: false, error: 'Verification code not found' };
     } catch (error) {
-      console.log(error);
-      return { ok: false, error };
+      return { ok: false, error: 'Could not verify email' };
     }
   }
 }
