@@ -84,6 +84,7 @@ export class UsersService {
       if (editProfileInput?.email) {
         user.email = editProfileInput.email;
         user.verified = false;
+        await this.verification.delete({ user: { id: user.id } });
         const verification = await this.verification.save(
           this.verification.create({ user }),
         );

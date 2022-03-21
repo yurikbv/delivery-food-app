@@ -15,6 +15,8 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
 import { Verification } from './users/entities/verification.entity';
 import { MailModule } from './mail/mail.module';
 import { ApolloDriver } from '@nestjs/apollo';
+import { Restaurant } from './restaurants/enteties/restaurant.entity';
+import { Category } from './restaurants/enteties/category.entity';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { ApolloDriver } from '@nestjs/apollo';
       envFilePath: process.env.NODE_ENV === 'dev' ? '.dev.env' : '.test.env',
       ignoreEnvFile: process.env.NODE_ENV === 'prod',
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('dev', 'prod').required(),
+        NODE_ENV: Joi.string().valid('dev', 'prod', 'test').required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.string().required(),
         DB_USERNAME: Joi.string().required(),
@@ -48,8 +50,9 @@ import { ApolloDriver } from '@nestjs/apollo';
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
-      logging: process.env.NODE_ENV !== 'prod',
-      entities: [User, Verification],
+      logging:
+        process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
+      entities: [User, Verification, Restaurant, Category],
     }),
     UsersModule,
     JwtModule.forRoot({
