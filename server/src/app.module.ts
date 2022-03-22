@@ -17,6 +17,8 @@ import { MailModule } from './mail/mail.module';
 import { ApolloDriver } from '@nestjs/apollo';
 import { Restaurant } from './restaurants/enteties/restaurant.entity';
 import { Category } from './restaurants/enteties/category.entity';
+import { RestaurantsModule } from './restaurants/restaurants.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -54,7 +56,6 @@ import { Category } from './restaurants/enteties/category.entity';
         process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
       entities: [User, Verification, Restaurant, Category],
     }),
-    UsersModule,
     JwtModule.forRoot({
       privateKey: process.env.TOKEN_SECRET,
     }),
@@ -63,6 +64,9 @@ import { Category } from './restaurants/enteties/category.entity';
       domain: process.env.MAILGUN_DOMAIN_NAME,
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }),
+    UsersModule,
+    RestaurantsModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
