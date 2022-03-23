@@ -1,4 +1,12 @@
-import { Resolver, Args, Mutation } from '@nestjs/graphql';
+import {
+  Resolver,
+  Args,
+  Mutation,
+  Query,
+  ResolveField,
+  Int,
+  Parent,
+} from '@nestjs/graphql';
 import { Restaurant } from './enteties/restaurant.entity';
 import {
   CreateRestaurantInput,
@@ -6,7 +14,7 @@ import {
 } from './dtos/create-restaurant.dto';
 import { RestaurantService } from './restaurants.service';
 import { AuthUser } from '../auth/auth-user.decorator';
-import { User, UserRole } from '../users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { Role } from '../auth/role.decorator';
 import {
   EditRestaurantInput,
@@ -16,6 +24,15 @@ import {
   DeleteRestaurantInput,
   DeleteRestaurantOutput,
 } from './dtos/delete-restaurant.dto';
+import { Category } from './enteties/category.entity';
+import { AllCategoriesOutput } from './dtos/all-categories.dto';
+import { CategoryInput, CategoryOutput } from './dtos/category.dto';
+import { RestaurantsInput, RestaurantsOutput } from './dtos/restaurants.dto';
+import { RestaurantInput, RestaurantOutput } from './dtos/restaurant.dto';
+import {
+  SearchRestaurantInput,
+  SearchRestaurantOutput,
+} from './dtos/search-restaurant.dto';
 
 @Resolver((of) => Restaurant)
 export class RestaurantsResolver {
@@ -51,5 +68,45 @@ export class RestaurantsResolver {
       owner,
       deleteRestaurantInput,
     );
+  }
+
+  @Query((returns) => RestaurantsOutput)
+  restaurants(
+    @Args('input') restaurantsInput: RestaurantsInput,
+  ): Promise<RestaurantsOutput> {
+    return this.restaurantService.allRestaurants(restaurantsInput);
+  }
+
+  @Query((returns) => RestaurantOutput)
+  restaurant(
+    @Args('input') restaurantInput: RestaurantInput,
+  ): Promise<RestaurantOutput> {
+    return this.restaurantService.findRestaurantById(restaurantInput);
+  }
+
+  @Query((returns) => SearchRestaurantOutput)
+  searchRestaurant(
+    @Args('input') searchRestaurantInput: SearchRestaurantInput,
+  ): Promise<SearchRestaurantOutput> {
+    return this.restaurantService.searchRestaurantByName(searchRestaurantInput);
+  }
+}
+
+@Resolver((of) => Category)
+export class CategoryResolver {
+  constructor(private readonly restaurantService: RestaurantService) {}
+  @ResolveField((returns) => Int)
+  restaurantCount(@Parent() category: Category): Promise<number> {
+    return this.restaurantService.countRestaurants(category);
+  }
+
+  @Query((returns) => AllCategoriesOutput)
+  allCategories(): Promise<AllCategoriesOutput> {
+    return this.restaurantService.allCategories();
+  }
+
+  @Query((returns) => CategoryOutput)
+  category(@Args() categoryInput: CategoryInput): Promise<CategoryOutput> {
+    return this.restaurantService.findCategoryBySlug(categoryInput);
   }
 }
