@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/yurikbv/delivery-app/issues"
   },
-  "homepage": "https://github.com/yurikbv/delivery-app#readme"
+  "homepage": "https://github.com/yurikbv/delivery-app#readme",
+  "dependencies": {
+    "subscriptions-transport-ws": "^0.11.0"
+  }
 }

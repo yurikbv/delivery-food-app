@@ -4,7 +4,7 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
+import { GqlContextType, GraphQLModule } from '@nestjs/graphql';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -23,6 +23,7 @@ import { Dish } from './restaurants/enteties/dish.entity';
 import { OrdersModule } from './orders/orders.module';
 import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/order.item.entity';
+import { Context } from 'graphql-ws';
 
 @Module({
   imports: [
@@ -45,8 +46,18 @@ import { OrderItem } from './orders/entities/order.item.entity';
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
-      context: ({ req }) => ({ user: req['user'] }),
       driver: ApolloDriver,
+      installSubscriptionHandlers: true,
+      subscriptions: {
+        'subscriptions-transport-ws': {
+          onConnect: (connectionParams) => {
+            return { token: connectionParams['x-jwt'] };
+          },
+        },
+      },
+      context: ({ req }) => {
+        return { token: req.headers['x-jwt'] };
+      },
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -84,11 +95,4 @@ import { OrderItem } from './orders/entities/order.item.entity';
   controllers: [],
   providers: [],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes({
-      path: '/graphql',
-      method: RequestMethod.POST,
-    });
-  }
-}
+export class AppModule {}
