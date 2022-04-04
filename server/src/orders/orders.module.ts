@@ -6,7 +6,6 @@ import { OrderService } from './orders.service';
 import { Restaurant } from '../restaurants/enteties/restaurant.entity';
 import { OrderItem } from './entities/order.item.entity';
 import { Dish } from '../restaurants/enteties/dish.entity';
-import { PubSub } from 'graphql-subscriptions';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Order, Restaurant, OrderItem, Dish])],
