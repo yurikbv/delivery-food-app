@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run start:dev --prefix server",
+    "server": "npm run start:dev --prefix server",
+    "client": "npm run start --prefix client",
     "test": "npm run test:watch --prefix server",
-    "test2e2": "npm run test:e2e --prefix server"
+    "test2e2": "npm run test:e2e --prefix server",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,6 @@
   },
   "homepage": "https://github.com/yurikbv/delivery-app#readme",
   "dependencies": {
-    "subscriptions-transport-ws": "^0.11.0"
+    "concurrently": "^7.1.0"
   }
 }

@@ -133,6 +133,9 @@ export class RestaurantService {
       if (!category) return { ok: false, error: 'Category not found' };
       category.restaurants = await this.restaurants.find({
         where: { category },
+        order: {
+          isPromoted: 'DESC',
+        },
         take: 25,
         skip: (page - 1) * 25,
       });
@@ -148,6 +151,9 @@ export class RestaurantService {
       const [restaurants, totalItems] = await this.restaurants.findAndCount({
         take: 25,
         skip: (page - 1) * 25,
+        order: {
+          isPromoted: 'DESC',
+        },
       });
       return {
         ok: true,
@@ -223,7 +229,6 @@ export class RestaurantService {
       const dish = await this.dishes.findOne(editDishInput.dishId, {
         relations: ['restaurant'],
       });
-      console.log(dish);
       if (!dish) return { ok: false, error: 'Dish not found' };
       if (dish.restaurant.ownerId !== owner.id)
         return { ok: false, error: 'You cannot edit dish' };
