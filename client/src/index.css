@@ -7,4 +7,8 @@
 .btn__form {
   @apply mt-3 text-white py-4 transition-colors text-lg font-medium focus:outline-none
 }
+
+.container {
+  @apply w-full max-w-screen-xl mx-auto
+}
 @tailwind utilities;

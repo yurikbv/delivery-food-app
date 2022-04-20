@@ -11,7 +11,7 @@ import {
 import logo from '../images/logo.svg';
 import Button from '../components/Button';
 import { Link, useNavigate } from 'react-router-dom';
-import { authToken, isLoggedInVar } from '../apollo';
+import { authTokenVar, isLoggedInVar } from '../apollo';
 import { LOCALSTORAGE_TOKEN } from '../constants';
 
 interface ILoginForm {
@@ -51,7 +51,7 @@ const Login = () => {
       return setError('result', { message: error });
     }
     localStorage[LOCALSTORAGE_TOKEN] = token;
-    authToken(token);
+    authTokenVar(token);
     isLoggedInVar(true);
     navigate('/', { replace: true });
   };

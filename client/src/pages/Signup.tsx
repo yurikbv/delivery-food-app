@@ -52,7 +52,7 @@ const SignUp = () => {
     if (!ok && error) {
       return setError('result', { message: error });
     }
-    navigate('/login', { replace: true });
+    navigate('/', { replace: true });
   };
 
   const [createAccountMutation, { loading }] = useMutation<
@@ -152,7 +152,7 @@ const SignUp = () => {
         </form>
         <div>
           Already have an account?{' '}
-          <Link to="/login" className="text-lime-600 hover:underline font-bold">
+          <Link to="/" className="text-lime-600 hover:underline font-bold">
             Log in now.
           </Link>
         </div>
