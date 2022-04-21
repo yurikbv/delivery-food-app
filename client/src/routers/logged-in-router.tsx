@@ -1,32 +1,22 @@
 import React, { Fragment } from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { isLoggedInVar } from '../apollo';
-import { gql, useQuery } from '@apollo/client';
-import { meQuery } from '../__generated__/meQuery';
 import { LOCALSTORAGE_TOKEN } from '../constants';
 import Restaurants from '../pages/client/restaurants';
 import NotFound from '../pages/404';
 import Header from '../components/Header';
+import { useMe } from '../hooks/useMe';
+import ConfirmEmail from '../pages/user/ConfirmEmail';
 
 const clientRoutes = (
   <Fragment>
     <Route path="/" element={<Restaurants />} />
+    <Route path="/confirm" element={<ConfirmEmail />} />
   </Fragment>
 );
 
-const ME_QUERY = gql`
-  query meQuery {
-    me {
-      id
-      email
-      role
-      verified
-    }
-  }
-`;
-
 const LoggedInRouter = () => {
-  const { data, loading, error } = useQuery<meQuery>(ME_QUERY);
+  const { data, loading, error } = useMe();
 
   if (loading)
     return (
